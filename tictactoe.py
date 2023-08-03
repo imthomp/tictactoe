@@ -1,13 +1,14 @@
-# started at 10:30am on 8/3/2023
+# started at 10:30am EDT on 8/3/2023
 
 from random import randint
 
 '''
-Okay, so I'm going to try to make a tic tac toe game in python. I think I will use a 2d array  to represent the board. I'll also make a list of players, the first one being the player (X) and the second one being the computer (O).
+Okay, so I'm going to try to make a tic tac toe game in python. I think I will use a list of lists called array to represent the board. I'll also make a list of players, the first one being the player (X) and the second one being the computer (O).
 '''
 
 blank_array = [['_','_','_'],['_','_','_'],['_','_','_']]
-array = blank_array.copy()
+array = blank_array[:]
+# array = blank_array.copy()
 players = ['X','O']
           
 '''
@@ -15,8 +16,8 @@ I'm gonna have a function that prints the board, a function that checks if the p
 '''
 
 def printBoard():
-    for i in range(3):
-        for j in range(3):
+    for i in range(len(array)):
+        for j in range(len(array[i])):
             print(array[i][j] + " ", end = "")
         print()
 
@@ -31,11 +32,11 @@ def printBoard():
     # print(array[2])
 
 '''
-Simple enough. I might come back and fix up the formatting later, but for now, this is fine. I'll make the win and tie funcions.
+Simple enough. I might come back and fix up the formatting later, but for now, this is fine. I'll make the win and tie funcions now.
 '''
 
 def checkWin(player):
-    for i in range(3):
+    for i in range(len(array)):
         # horizontal
         if array[i][0] == array[i][1] == array[i][2] == player:
             return True
@@ -56,6 +57,7 @@ def checkTie():
         return True
     return False
 
+### an idea I had that I didn't end up using
 # def checkResult():
 #     for player in players:
 #         if checkWin(player):
@@ -65,7 +67,7 @@ def checkTie():
 #     return None
 
 '''
-Now, I need a function that updates the board. I'll also make the player and computer turn functions and a function that allows the player to play the game again.
+Now, I need a function that updates the board. I'll also make the player and computer turn functions.
 '''
 
 def updateBoard(player, guess):
@@ -85,6 +87,8 @@ def takePlayerTurn():
                 print('That space is already taken. Try again.')
         except ValueError:
             print('Invalid input. Try again.')
+        except IndexError:
+            print('Invalid input. Try again.')
 
 def takeComputerTurn():
     print('The computer\'s turn!')
@@ -94,12 +98,19 @@ def takeComputerTurn():
             updateBoard(players[1], guess)
             break
 
+'''
+Now I need a function that ends the game and asks if the player wants to play again.
+
+I seem to be having trouble resetting the array for a new game... Wait, I got it!
+'''
+
 def endGame():
     while True:
         play_again = input('Would you like to play again? (y/n) ')
         if play_again == 'y':
-            global array
-            array = blank_array.copy()
+            for i in range(len(array)):
+                for j in range(len(array[i])):
+                    array[i][j] = '_'
             playGame()
         elif play_again == 'n':
             print('Thanks for playing!')
@@ -193,3 +204,17 @@ def main():
     playGame()
 
 main()
+
+'''
+Things I would do differently next time in order of importance:
+- I would make the win and tie sections more efficient and compact.
+- I would make the board a class, and the functions would be methods of the class.
+- I would give the computer some sort of strategy.
+- I would make a more efficient way to clear the array.
+- I would provide two-player functionality.
+- I would allow the player to choose X or O.
+- I would make the game more visually appealing.
+- I would add a win counter.
+'''
+
+# ended at 12:40pm EDT on 8/3/2023
