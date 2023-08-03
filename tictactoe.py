@@ -19,7 +19,7 @@ def printBoard(array):
     print(array[2])
 
 '''
-Simple enough. I might come back and fix up the formatting later, but for now, this is fine.
+Simple enough. I might come back and fix up the formatting later, but for now, this is fine. I'll make the win and tie funcions.
 '''
 
 def checkWin(array, player):
@@ -38,25 +38,50 @@ def checkWin(array, player):
         return True
     return False
 
-'''
-Okay, I'm satisfied with this. Let's do the tie and result function.
-'''
-
 def checkTie(array):
     # if all spaces are filled
     if '_' not in array[0] and '_' not in array[1] and '_' not in array[2]:
         return True
 
-def checkResult():
-    for player in players:
-        if checkWin(player):
-            return player
-    if checkTie():
-        return 'Tie'
-    return None
+# def checkResult():
+#     for player in players:
+#         if checkWin(player):
+#             return player
+#     if checkTie():
+#         return 'Tie'
+#     return None
 
 '''
-Now, I need a function that takes in the player's input and updates the board.
+Now, I need a function that updates the board. I'll also make the player and computer turn functions.
+'''
+
+def updateBoard(array, player, guess):
+    array[guess[0]][guess[1]] = player
+    return array
+
+def takePlayerTurn():
+    while True:
+        guess = input('Your turn! Enter your guess: ')
+        guess = guess.split(',')
+        guess = [int(guess[0]), int(guess[1])]
+        if blank_array[guess[0]][guess[1]] == '_':
+            blank_array[guess[0]][guess[1]] = players[0]
+            break
+        else:
+            print('That space is already taken. Try again.')
+    return blank_array
+
+def takeComputerTurn():
+    print('The computer\'s turn!')
+    while True:
+        guess = [randint(0,2), randint(0,2)]
+        if blank_array[guess[0]][guess[1]] == '_':
+            blank_array[guess[0]][guess[1]] = players[1]
+            break
+    return blank_array
+
+'''
+Cool! Now I just need to make a function that plays the game.
 '''
 
 def playGame():
@@ -64,38 +89,27 @@ def playGame():
     print('You are X, and the computer is O.')
     print('To play, enter the row and column of the space you want to play in.')
     print('The top left space is 0,0, and the bottom right space is 2,2.')
-    print('Good luck!\n')
+    print('Good luck!')
     printBoard(blank_array)
     while True:
-        guess = input('Enter your guess: ')
-        guess = guess.split(',')
-        guess = [int(guess[0]), int(guess[1])]
-        if blank_array[guess[0]][guess[1]] == '_':
-            blank_array[guess[0]][guess[1]] = 'X'
+        # player turn
+        takePlayerTurn()
+        printBoard(blank_array)
+        if checkWin(blank_array, players[0]):
+            print('You win!')
             break
-        else:
-            print('That space is already taken. Try again.')
-    printBoard(blank_array)
-    if checkWin(blank_array, 'X'):
-        print('You win!')
-        return
-    if checkTie(blank_array):
-        print('Tie!')
-        return
-    print('Computer\'s turn...')
-    while True:
-        guess = [randint(0,2), randint(0,2)]
-        if blank_array[guess[0]][guess[1]] == '_':
-            blank_array[guess[0]][guess[1]] = 'O'
+        if checkTie(blank_array):
+            print('It\'s a tie!')
             break
-    printBoard(blank_array)
-    if checkWin(blank_array, 'O'):
-        print('You lose!')
-        return
-    if checkTie(blank_array):
-        print('Tie!')
-        return
-    playGame()
+        # computer turn
+        takeComputerTurn()
+        printBoard(blank_array)
+        if checkWin(blank_array, players[1]):
+            print('You lose!')
+            break
+        if checkTie(blank_array):
+            print('It\'s a tie!')
+            break
 
 def main():
     # game1 = [['X','X','X'],['_', '_', '_'], ['_', '_', '_']]
