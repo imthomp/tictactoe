@@ -74,15 +74,17 @@ def updateBoard(player, guess):
 
 def takePlayerTurn():
     while True:
-        guess = input('Your turn! Enter your guess: ')
-        guess = guess.split(',')
-        guess = [int(guess[0]), int(guess[1])]
-        if array[guess[0]][guess[1]] == '_':
-            updateBoard(players[0], guess)
-            break
-        else:
-            print('That space is already taken. Try again.')
-    return array
+        try:
+            guess = input('Your turn! Enter your guess: ')
+            guess = guess.split(',')
+            guess = [int(guess[0]), int(guess[1])]
+            if array[guess[0]][guess[1]] == '_':
+                updateBoard(players[0], guess)
+                break
+            else:
+                print('That space is already taken. Try again.')
+        except ValueError:
+            print('Invalid input. Try again.')
 
 def takeComputerTurn():
     print('The computer\'s turn!')
@@ -91,13 +93,13 @@ def takeComputerTurn():
         if array[guess[0]][guess[1]] == '_':
             updateBoard(players[1], guess)
             break
-    return array
 
 def endGame():
     while True:
         play_again = input('Would you like to play again? (y/n) ')
         if play_again == 'y':
-            del array
+            global array
+            array = blank_array.copy()
             playGame()
         elif play_again == 'n':
             print('Thanks for playing!')
@@ -119,8 +121,10 @@ def playGame():
     player_first = input('Would you like to go first? (y/n) ')
     if player_first == 'y':
         print('You will go first.')
-    else:
+    elif player_first == 'n':
         print('The computer will go first.')
+    else:
+        print('Invalid input. Try again.')
 
     printBoard()
 
